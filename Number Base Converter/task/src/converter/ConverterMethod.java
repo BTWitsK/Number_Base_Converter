@@ -39,8 +39,6 @@ class HexMethod implements ConverterMethod {
             case 15 -> "F";
             default -> String.valueOf(from % base);
         };
-
         return from == 0 ? output : convert(from / base).append(remainder);
     }
 }
-

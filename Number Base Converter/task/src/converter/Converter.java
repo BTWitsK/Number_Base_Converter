@@ -5,14 +5,13 @@ class Converter{
 
     public void setConverter(int method) {
         converter = switch(method) {
-            case 2 -> converter = new BinaryMethod();
-            case 8 -> converter = new OctalMethod();
-            case 16 -> converter = new HexMethod();
+            case 2 -> new BinaryMethod();
+            case 8 -> new OctalMethod();
+            case 16 -> new HexMethod();
             default -> null;
         };
     }
-
     public void convert(int from) {
-        System.out.println(converter.convert(from).reverse());
+        System.out.println(converter.convert(from));
     }
 }
