@@ -29,9 +29,18 @@ class HexMethod implements ConverterMethod {
     int base = 16;
 
     @Override
-    public String convert(int from) {
-        //TODO: implement hex convert method
+    public StringBuilder convert(int from) {
+        String remainder = switch (from % base) {
+            case 10 -> "A";
+            case 11 -> "B";
+            case 12 -> "C";
+            case 13 -> "D";
+            case 14 -> "E";
+            case 15 -> "F";
+            default -> String.valueOf(from % base);
+        };
 
+        return from == 0 ? output : convert(from / base).append(remainder);
     }
 }
 
