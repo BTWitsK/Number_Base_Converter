@@ -1,7 +1,5 @@
 package converter;
 
-import java.util.*;
-
 class Converter{
     public ConverterMethod converter;
 
@@ -15,6 +13,6 @@ class Converter{
     }
 
     public void convert(int from) {
-        System.out.println(converter.convert(from));
+        System.out.println(converter.convert(from).reverse());
     }
 }
