@@ -2,23 +2,19 @@ package converter;
 
 import java.util.*;
 
-//TODO: build converter abstract class
-//TODO: build hex template
-//TODO: build octal template
-//TODO:
-//TODO:
+class Converter{
+    public ConverterMethod converter;
 
-interface Converter {
-    StringBuilder output = new StringBuilder();
-    void convert(int from, int to);
-}
-
-class BinaryMethod implements Converter {
-
-    @Override
-    public void convert(int from, int to) {
-        //TODO: implement binary convert method
-        System.out.println(output);
+    public void setConverter(int method) {
+        converter = switch(method) {
+            case 2 -> converter = new BinaryMethod();
+            case 8 -> converter = new OctalMethod();
+            case 16 -> converter = new HexMethod();
+            default -> null;
+        };
     }
 
+    public void convert(int from) {
+        System.out.println(converter.convert(from));
+    }
 }
