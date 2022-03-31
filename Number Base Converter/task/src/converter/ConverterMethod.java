@@ -10,34 +10,28 @@ class BinaryMethod implements ConverterMethod {
 
     @Override
     public StringBuilder convert(int from) {
-        if (from == 0) {
-            return output;
-        }
-
-        return from % base == 0 ? output.append("0").append(convert(from / base)) :
-                output.append("1").append(convert(from / base));
-
+        return from == 0 ? output :
+                from % base == 0 ? convert(from / base).append("0") :
+                        convert(from / base).append("1");
     }
-
 }
 
 class OctalMethod implements ConverterMethod {
-    double base = 8;
+    int base = 8;
 
     @Override
     public StringBuilder convert(int from) {
-        //TODO: implement octal convert method
-        System.out.print(output);
+        return from == 0 ? output : convert(from / base).append(from % base);
     }
 }
 
 class HexMethod implements ConverterMethod {
-    double base = 16;
+    int base = 16;
 
     @Override
     public String convert(int from) {
         //TODO: implement hex convert method
-        System.out.println(output);
+
     }
 }
 
