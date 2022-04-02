@@ -3,7 +3,17 @@ package converter;
 interface ConverterMethod {
     StringBuilder output = new StringBuilder();
     StringBuilder convertToDec(int number);
-    StringBuilder convertFromDec(String number);
+    int base = 0;
+
+    default StringBuilder convertFromDec(String number) {
+        return output.append(fromDecHelper(0, Integer.parseInt(number), 0));
+    }
+
+    default double fromDecHelper(double total, int currentNumber, int power) {
+        return currentNumber < 10 ? total + currentNumber * Math.pow(base, power) :
+                fromDecHelper(total + currentNumber % 10 * Math.pow(base, power),
+                        currentNumber / 10, ++power);
+    }
 }
 
 class BinaryMethod implements ConverterMethod {
@@ -15,7 +25,6 @@ class BinaryMethod implements ConverterMethod {
                 number % base == 0 ? convertToDec(number / base).append("0") :
                         convertToDec(number / base).append("1");
     }
-    //TODO: implement convert to decimal
 }
 
 class OctalMethod implements ConverterMethod {
@@ -25,7 +34,6 @@ class OctalMethod implements ConverterMethod {
     public StringBuilder convertToDec(int number) {
         return number == 0 ? output : convertToDec(number / base).append(number % base);
     }
-    //TODO: implement convert to decimal
 }
 
 class HexMethod implements ConverterMethod {
@@ -44,5 +52,22 @@ class HexMethod implements ConverterMethod {
         };
         return number == 0 ? output : convertToDec(number / base).append(remainder);
     }
-    //TODO: implement convert to decimal
+
+    @Override
+    public StringBuilder convertFromDec(String number) {
+        int total = 0;
+
+        for (int i = number.length() - 1; i > 0; i--) {
+            total += switch(String.valueOf(number.charAt(i)).toUpperCase()) {
+                case "A" -> 10;
+                case "B" -> 11;
+                case "C" -> 12;
+                case "D" -> 13;
+                case "E" -> 14;
+                case "F" -> 15;
+                default -> Integer.parseInt(number);
+            };
+        }
+        return output.append(total);
+    }
 }

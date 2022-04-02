@@ -9,12 +9,13 @@ public class Main {
     static int base;
 
     public static void main(String[] args) {
-        do {
-            printMenu();
+        printMenu();
+        while (converter.run()) {
             converter.setConverter(base);
             System.out.print("\nConversion result: ");
             converter.convert(number);
-        } while (converter.run());
+            printMenu();
+        }
     }
 
     public static void printMenu() {
