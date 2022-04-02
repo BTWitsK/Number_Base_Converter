@@ -43,9 +43,9 @@ class Converter{
 
     public void convert(String num) {
         if (mode == Mode.FROM) {
-            System.out.println(converter.convertToDec(Integer.parseInt(num)));
+            System.out.println(converter.convertFromDec(Integer.parseInt(num)));
         } else {
-            System.out.println(converter.convertFromDec(num));
+            System.out.println(converter.convertToDec(num));
         }
     }
 }
