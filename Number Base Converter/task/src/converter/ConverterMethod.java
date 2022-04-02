@@ -2,43 +2,47 @@ package converter;
 
 interface ConverterMethod {
     StringBuilder output = new StringBuilder();
-    StringBuilder convert(int from);
+    StringBuilder convertToDec(int number);
+    StringBuilder convertFromDec(String number);
 }
 
 class BinaryMethod implements ConverterMethod {
     int base = 2;
 
     @Override
-    public StringBuilder convert(int from) {
-        return from == 0 ? output :
-                from % base == 0 ? convert(from / base).append("0") :
-                        convert(from / base).append("1");
+    public StringBuilder convertToDec(int number) {
+        return number == 0 ? output :
+                number % base == 0 ? convertToDec(number / base).append("0") :
+                        convertToDec(number / base).append("1");
     }
+    //TODO: implement convert to decimal
 }
 
 class OctalMethod implements ConverterMethod {
     int base = 8;
 
     @Override
-    public StringBuilder convert(int from) {
-        return from == 0 ? output : convert(from / base).append(from % base);
+    public StringBuilder convertToDec(int number) {
+        return number == 0 ? output : convertToDec(number / base).append(number % base);
     }
+    //TODO: implement convert to decimal
 }
 
 class HexMethod implements ConverterMethod {
     int base = 16;
 
     @Override
-    public StringBuilder convert(int from) {
-        String remainder = switch (from % base) {
+    public StringBuilder convertToDec(int number) {
+        String remainder = switch (number % base) {
             case 10 -> "A";
             case 11 -> "B";
             case 12 -> "C";
             case 13 -> "D";
             case 14 -> "E";
             case 15 -> "F";
-            default -> String.valueOf(from % base);
+            default -> String.valueOf(number % base);
         };
-        return from == 0 ? output : convert(from / base).append(remainder);
+        return number == 0 ? output : convertToDec(number / base).append(remainder);
     }
+    //TODO: implement convert to decimal
 }

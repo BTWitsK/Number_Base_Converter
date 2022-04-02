@@ -1,7 +1,20 @@
 package converter;
 
 class Converter{
-    public ConverterMethod converter;
+    enum Mode {
+        TO("/to"),
+        FROM("/from"),
+        EXIT("/exit");
+
+        String choice;
+
+        Mode (String input) {
+            this.choice = input;
+        }
+    }
+
+    private ConverterMethod converter;
+    private Mode mode;
 
     public void setConverter(int method) {
         converter = switch(method) {
@@ -11,7 +24,28 @@ class Converter{
             default -> null;
         };
     }
-    public void convert(int from) {
-        System.out.println(converter.convert(from));
+
+    public void setMode(String input) {
+        for (Mode mode : Mode.values()) {
+            if (input.equals(mode.choice)) {
+                this.mode = mode;
+            }
+        }
+    }
+
+    public Mode getMode() {
+        return this.mode;
+    }
+
+    public boolean run() {
+        return this.mode != Mode.EXIT;
+    }
+
+    public void convert(String num) {
+        if (mode == Mode.FROM) {
+            System.out.println(converter.convertToDec(Integer.parseInt(num)));
+        } else {
+            System.out.println(converter.convertFromDec(num));
+        }
     }
 }
