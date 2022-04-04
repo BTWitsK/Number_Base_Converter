@@ -1,4 +1,5 @@
 package converter;
+import java.math.*;
 
 class Converter{
     enum Mode {
@@ -41,11 +42,11 @@ class Converter{
         return this.mode != Mode.EXIT;
     }
 
-    public void convert(String num) {
+    public int convert(String num) {
         if (mode == Mode.FROM) {
-            System.out.println(converter.convertFromDec(Integer.parseInt(num)));
+            return Integer.parseInt(converter.convertFromDec(Integer.parseInt(num)).toString());
         } else {
-            System.out.println(converter.convertToDec(num));
+            return Integer.parseInt(converter.convertToDec(num).toString());
         }
     }
 }
