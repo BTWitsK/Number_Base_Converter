@@ -1,52 +1,61 @@
 package converter;
 import java.math.*;
+import java.util.*;
 
 class Converter{
-    enum Mode {
-        TO("/to"),
-        FROM("/from"),
-        EXIT("/exit");
+    int source;
+    int target;
+    boolean run;
+    HashMap<Character, Integer> alphabetMap = new HashMap<>();
+    HashMap<Integer, Character> digitMap = new HashMap<>();
 
-        String choice;
-
-        Mode (String input) {
-            this.choice = input;
-        }
-    }
-
-    private ConverterMethod converter;
-    private Mode mode;
-
-    public void setConverter(int method) {
-        converter = switch(method) {
-            case 2 -> new BinaryMethod();
-            case 8 -> new OctalMethod();
-            case 16 -> new HexMethod();
-            default -> null;
-        };
-    }
-
-    public void setMode(String input) {
-        for (Mode mode : Mode.values()) {
-            if (input.equals(mode.choice)) {
-                this.mode = mode;
+    public Converter(String input) {
+        int decimal = 10;
+        String[] parameters = input.split(" ");
+        try {
+            this.source = Integer.parseInt(parameters[0]);
+            this.target = Integer.parseInt(parameters[1]);
+            for (char i = 'a'; i <= 'z'; i++) {
+                alphabetMap.put(i, decimal);
+                digitMap.put(decimal, i);
             }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            this. run = false;
         }
     }
 
-    public Mode getMode() {
-        return this.mode;
+    public boolean isRunning() {
+        return run;
     }
 
-    public boolean run() {
-        return this.mode != Mode.EXIT;
-    }
-
-    public int convert(String num) {
-        if (mode == Mode.FROM) {
-            return Integer.parseInt(converter.convertFromDec(Integer.parseInt(num)).toString());
+    public void convert(String num) {
+        if (num.contains(".")) {
+            String[] number = num.split("\\.");
+            System.out.printf("\nConversion result: %s.%s", convertWhole(number[0]), convertFraction(number[1]));
         } else {
-            return Integer.parseInt(converter.convertToDec(num).toString());
+            System.out.printf("\nConversion result: %s", convertWhole(num));
         }
+    }
+
+   public String convertWhole (String number) {
+        return new BigInteger(number, this.source).toString(this.target);
+   }
+
+    public String convertFraction (String number) {
+        BigDecimal decimal = new BigDecimal(number);
+
+        decimal = decimal.multiply(new BigDecimal(base).pow(number.length()));
+
+        StringBuilder output = new StringBuilder(decimal.toBigInteger().toString(base));
+
+
+        return output.toString();
+    }
+
+    public String baseLessThan10(Character digit) {
+        return Character.isDigit(digit) ?
+                Integer.parseInt(String.valueOf(digit)) < 10 ?
+                        String.valueOf(digit) : digitMap.get(Integer.parseInt(String.valueOf(digit))).toString()
+                : alphabetMap.get(digit).toString();
     }
 }

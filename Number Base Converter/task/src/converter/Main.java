@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
-    static Converter converter = new Converter();
     static String number;
 
     public static void main(String[] args) {
@@ -34,4 +33,5 @@ public class Main {
             mainInput = scanner.nextLine().split(" ");
         }
     }
+
 }
