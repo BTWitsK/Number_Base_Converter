@@ -3,11 +3,12 @@ import java.math.*;
 import java.util.*;
 
 class Converter{
-    int source;
-    int target;
-    boolean run;
-    HashMap<Character, Integer> alphabetMap = new HashMap<>();
-    HashMap<Integer, Character> digitMap = new HashMap<>();
+    private int source;
+    private int target;
+    private boolean mainMenu = true;
+    private boolean subMenu = true;
+    private final HashMap<Character, Integer> alphabetMap = new HashMap<>();
+    private final HashMap<Integer, String> digitMap = new HashMap<>();
 
     public Converter(String input) {
         int decimal = 10;
@@ -17,19 +18,31 @@ class Converter{
             this.target = Integer.parseInt(parameters[1]);
             for (char i = 'a'; i <= 'z'; i++) {
                 alphabetMap.put(i, decimal);
-                digitMap.put(decimal, i);
+                digitMap.put(decimal, Character.toString(i));
+                decimal++;
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            this. run = false;
+        } catch (NumberFormatException e) {
+            this.mainMenu = false;
         }
     }
 
-    public boolean isRunning() {
-        return run;
+    public boolean inMainMenu() {
+        return mainMenu;
+    }
+
+    public boolean inSubMenu() {
+        return subMenu;
+    }
+
+    public void getNumber() {
+        System.out.printf("\nEnter number in base %d to convert to base %d (To go back type /back)", source, target);
     }
 
     public void convert(String num) {
-        if (num.contains(".")) {
+        num = num.toLowerCase();
+        if ("/back".equals(num)) {
+            subMenu = false;
+        } else if (num.contains(".")) {
             String[] number = num.split("\\.");
             System.out.printf("\nConversion result: %s.%s", convertWhole(number[0]), convertFraction(number[1]));
         } else {
@@ -37,25 +50,43 @@ class Converter{
         }
     }
 
-   public String convertWhole (String number) {
+    private String convertWhole (String number) {
         return new BigInteger(number, this.source).toString(this.target);
    }
 
-    public String convertFraction (String number) {
-        BigDecimal decimal = new BigDecimal(number);
+    private String convertFraction (String num) {
+        BigDecimal number = new BigDecimal(convertToDecimal(num)).setScale(5, RoundingMode.UP);
+        StringBuilder output = new StringBuilder();
 
-        decimal = decimal.multiply(new BigDecimal(base).pow(number.length()));
-
-        StringBuilder output = new StringBuilder(decimal.toBigInteger().toString(base));
-
-
+        do {
+            String[] result = number.multiply(BigDecimal.valueOf(target)).toString().split("\\.");
+            output.append(digitToBase(Integer.parseInt(result[0])));
+            number = new BigDecimal(".".concat(result[1]));
+        } while (!number.equals(BigDecimal.ZERO) && output.length() < 5);
+        if (output.length() > 5) {
+            BigDecimal finalNumber = new BigDecimal(".".concat(output.toString())).setScale(5, RoundingMode.UP);
+            String[] finalOutput = finalNumber.toString().split("\\.");
+            return finalOutput[1];
+        }
         return output.toString();
     }
 
-    public String baseLessThan10(Character digit) {
-        return Character.isDigit(digit) ?
-                Integer.parseInt(String.valueOf(digit)) < 10 ?
-                        String.valueOf(digit) : digitMap.get(Integer.parseInt(String.valueOf(digit))).toString()
-                : alphabetMap.get(digit).toString();
+    private String convertToDecimal(String number) {
+        BigDecimal decimal = BigDecimal.ZERO;
+        int power = -1;
+
+        for (int i = 0; i < number.length(); i ++) {
+            decimal = decimal.add(new BigDecimal(String.valueOf(digitToDecimal(number.charAt(i))))
+                    .multiply(BigDecimal.valueOf(Math.pow(source, power--))));
+        }
+        return decimal.toString();
+    }
+
+    private int digitToDecimal(Character digit) {
+        return Character.isDigit(digit) ? Integer.parseInt(String.valueOf(digit)) : alphabetMap.get(digit);
+    }
+
+    private String digitToBase(int num) {
+        return num < 10 ? String.valueOf(num) : digitMap.get(num);
     }
 }
